@@ -36,7 +36,7 @@
        host: smtp.redhat.com
        port: 587
        from: noreply@redhat.com
-       to: "{{ email_id }}"
+       to: Dnyaneshwar More <dmore@redhat.com>
        subject: Slash partition alert on "{{ inventory_hostname }}"
        body: 
         'Hello Team,
