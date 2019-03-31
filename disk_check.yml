@@ -8,7 +8,7 @@
     - debug: var=diskoutput
 
     - name: check the /data size
-      shell: df -TH | grep "/data" | awk '{print $6}' | sed 's/%//'
+      shell: df -TH | grep "/home" | awk '{print $6}' | sed 's/%//'
       register: dataout
 
     - debug: var=dataout
@@ -27,7 +27,7 @@
 
     - name: Check the size and extend the size accordingly
       shell: lvextend -r -L 1G -n /dev/centos/data
-      when: dataout.stdout >= 6 and vgOutput >= size available
+      when: dataout.stdout >= 1
       register: lvextend
 
     - debug: var=lvextend
@@ -49,7 +49,7 @@
 #       We have perform basic clean-up steps following doc "https://mojo.redhat.com/docs/DOC-925160" to resolve the alert.
 #       Regards,
 #       GES Team
-      when: (disk_status.stdout >= "6")
+      when: (disk_status.stdout >= "1")
       delegate_to: localhost
       ignore_errors: yes
 
