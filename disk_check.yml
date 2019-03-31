@@ -5,13 +5,13 @@
       shell: df -TH
       register: diskoutput
 
-    - debug: var=diskoutput.stdout
+    - debug: var=diskoutput
 
     - name: check the /data size
       shell: df -TH | grep "/home" | awk '{print $6}' | sed 's/%//'
       register: homeout
 
-    - debug: var=homeout.stdout
+    - debug: var=homeout
 
     - name: check vg size
       shell: vgs | awk '{print $7}'| sed -sn 2p | sed 's/<//g'
@@ -23,14 +23,14 @@
       shell: vgs | awk '{print $7}'| sed -sn 2p | sed 's/<//g' | sed 's/g//g'
       register: vgsout
 
-    - debug: var=vgsout.stdout
+    - debug: var=vgsout
 
     - name: Check the size and extend the size accordingly
       shell: lvextend -r -L 1G -n /dev/centos/home
       when: homeout.stdout >= 6
       register: lvextend
 
-    - debug: var=lvextend.stdout
+    - debug: var=lvextend
 
     - name: sending Email
       mail:
@@ -41,7 +41,7 @@
        subject: Slash partition alert on "{{ inventory_hostname }}"
        body: 
         'Hello Team,
-         We have received the notification for slash partition on {{ inventory_hostname }} host. Total Disk Utilization is has crossed {{ diskoutput.stdout }}%.'
+         We have received the notification for slash partition on {{ inventory_hostname }} host. Total Disk Utilization is has crossed {{ homeout.stdout }}%.'
 #       Output Before executing Playbook:
 #       {{ before.stdout }}
 #       Output After executing Playbook:
@@ -50,7 +50,7 @@
 #       We have perform basic clean-up steps following doc "https://mojo.redhat.com/docs/DOC-925160" to resolve the alert.
 #       Regards,
 #       GES Team
-      when: (diskoutput.stdout >= "6")
+      when: (homeout.stdout >= "6")
       delegate_to: localhost
       ignore_errors: yes
 
