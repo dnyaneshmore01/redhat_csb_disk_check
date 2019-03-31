@@ -27,7 +27,7 @@
 
     - name: Check the size and extend the size accordingly
       shell: lvextend -r -L 1G -n /dev/centos/home
-      when: homeout.stdout >= 1
+      when: homeout.stdout >= 6
       register: lvextend
 
     - debug: var=lvextend.stdout
@@ -50,7 +50,7 @@
 #       We have perform basic clean-up steps following doc "https://mojo.redhat.com/docs/DOC-925160" to resolve the alert.
 #       Regards,
 #       GES Team
-      when: (diskoutput.stdout >= "1")
+      when: (diskoutput.stdout >= "6")
       delegate_to: localhost
       ignore_errors: yes
 
